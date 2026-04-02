@@ -904,7 +904,9 @@ section {
     max-width: 600px;
     width: 100%;
     margin: 0 auto;
-    background: #000000;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-radius: 12px;
     padding: 2rem;
     text-align: left;
@@ -932,10 +934,10 @@ section {
 }
 
 .input-group {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 8px;
     padding: 1rem 1.2rem;
     margin-bottom: 1rem;
@@ -947,8 +949,8 @@ section {
 
 .input-group:hover,
 .input-group:focus-within {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.25);
 }
 
 .input-group label {
@@ -981,11 +983,11 @@ section {
 
 .terminal-btn {
     width: 100%;
-    background: rgba(120, 120, 120, 0.25);
+    background: rgba(150, 150, 150, 0.2);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 8px;
     padding: 1rem;
     font-family: 'DM Mono', monospace;
@@ -1001,7 +1003,7 @@ section {
 }
 
 .terminal-btn:hover {
-    background: rgba(150, 150, 150, 0.35);
+    background: rgba(180, 180, 180, 0.3);
     transform: translateY(-2px);
 }
 
