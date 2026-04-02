@@ -15,6 +15,9 @@ gsap.registerPlugin(ScrollTrigger);
 // ─── WAIT FOR DOM ──────────────────────────
 function init() {
 
+    // Reveal page — prevents FOUC
+    document.body.classList.add('loaded');
+
     // ─── LENIS SMOOTH SCROLL ───────────────────
     const lenis = new Lenis({
         duration: 1.2,

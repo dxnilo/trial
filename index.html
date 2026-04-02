@@ -11,9 +11,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="/src/styles.css">
+
+    <style>
+        body {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        body.loaded {
+            opacity: 1;
+        }
+    </style>
     <noscript>
         <style>
+            body {
+                opacity: 1 !important;
+            }
+
             .reveal,
             .eyebrow,
             .hero-bottom,

@@ -845,7 +845,7 @@ section {
 .cta h2 {
     font-family: 'Syne', sans-serif;
     font-weight: 800;
-    font-size: clamp(2.5rem, 10vw, 8rem);
+    font-size: clamp(1.6rem, 8vw, 8rem);
     letter-spacing: -0.04em;
     margin-bottom: 1.5rem;
 }
@@ -1146,6 +1146,10 @@ section {
     }
 
     section {
+        padding: 5rem 1.5rem;
+    }
+
+    .cta {
         padding: 5rem 1.5rem;
     }
 
