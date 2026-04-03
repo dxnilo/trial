@@ -6,6 +6,136 @@
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@700;800&display=swap');
 
+/* ═══════ SPLASH SCREEN ═══════ */
+#splash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.splash-glass {
+    position: absolute;
+    inset: 0;
+    background: rgba(244, 241, 235, 0.72);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+}
+
+.splash-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+}
+
+.splash-logo {
+    width: 180px;
+    height: auto;
+    overflow: visible;
+}
+
+.splash-logo .vortex-c {
+    fill: none;
+    transform-origin: 35px 32.5px;
+}
+
+.splash-ui {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.8rem;
+    opacity: 0;
+}
+
+/* ── Language Selector ── */
+.lang-selector {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.lang-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    padding: 0.55rem 1.4rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.35s var(--ease);
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid rgba(8, 8, 8, 0.15);
+}
+
+.lang-btn:hover {
+    border-color: rgba(8, 8, 8, 0.4);
+}
+
+.lang-btn.active {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+}
+
+.lang-divider {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    color: rgba(8, 8, 8, 0.25);
+    user-select: none;
+}
+
+/* ── Enter Button ── */
+.splash-enter {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    padding: 1rem 3.2rem;
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+
+.splash-enter:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(8, 8, 8, 0.2);
+}
+
+.splash-enter:active {
+    transform: translateY(-1px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .splash-logo {
+        width: 130px;
+    }
+
+    .splash-content {
+        gap: 2.4rem;
+    }
+
+    .lang-btn {
+        font-size: 0.75rem;
+        padding: 0.5rem 1.1rem;
+    }
+
+    .splash-enter {
+        font-size: 0.72rem;
+        padding: 0.9rem 2.6rem;
+    }
+}
+
 /* --- RESET & BASE --- */
 *,
 *::before,

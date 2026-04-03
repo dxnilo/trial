@@ -5,27 +5,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRIAL — Desarrollo Web & Software a Medida</title>
+
+    <style>
+        /* Prevent FOUC — splash covers everything, hide content until JS runs */
+        body {
+            background: #f4f1eb;
+            margin: 0;
+        }
+
+        #app-content {
+            visibility: hidden;
+        }
+
+        .navbar,
+        section,
+        .metrics,
+        .marquee-section,
+        footer {
+            visibility: hidden;
+        }
+    </style>
+
     <meta name="description"
         content="TRIAL: Desarrollo web y software a medida. Construimos productos digitales precisos — webs, plataformas y software que escalan. Barranquilla, Colombia.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@700;800&display=swap"
         rel="stylesheet">
-
-    <style>
-        body {
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        body.loaded {
-            opacity: 1;
-        }
-    </style>
     <noscript>
         <style>
-            body {
-                opacity: 1 !important;
+            #splash {
+                display: none !important;
+            }
+
+            .navbar,
+            section,
+            .metrics,
+            .marquee-section,
+            footer {
+                visibility: visible !important;
             }
 
             .reveal,
@@ -50,6 +68,26 @@
 
 <body>
 
+    <!-- ═══════ SPLASH SCREEN ═══════ -->
+    <div id="splash">
+        <div class="splash-glass"></div>
+        <div class="splash-content">
+            <svg class="splash-logo" viewBox="0 0 70 65" fill="none">
+                <circle class="vortex-c" cx="35" cy="18" r="17" stroke="#080808" stroke-width="1.6" />
+                <circle class="vortex-c" cx="21" cy="46" r="17" stroke="#080808" stroke-width="1.6" />
+                <circle class="vortex-c" cx="49" cy="46" r="17" stroke="#080808" stroke-width="1.6" />
+            </svg>
+            <div class="splash-ui">
+                <div class="lang-selector">
+                    <button class="lang-btn" data-lang="en">EN</button>
+                    <span class="lang-divider">|</span>
+                    <button class="lang-btn active" data-lang="es">ES</button>
+                </div>
+                <button class="splash-enter" data-i18n="splashEnter">ENTRAR</button>
+            </div>
+        </div>
+    </div>
+
     <!-- NAVBAR -->
     <nav class="navbar">
         <a href="#" class="nav-logo">
@@ -61,11 +99,11 @@
             <span>TRIAL</span>
         </a>
         <div class="nav-links">
-            <a href="#servicios">Servicios</a>
-            <a href="#proyectos">Proyectos</a>
-            <a href="#proceso">Proceso</a>
-            <a href="#nosotros">Nosotros</a>
-            <a href="#contacto">Contacto</a>
+            <a href="#servicios" data-i18n="navServicios">Servicios</a>
+            <a href="#proyectos" data-i18n="navProyectos">Proyectos</a>
+            <a href="#proceso" data-i18n="navProceso">Proceso</a>
+            <a href="#nosotros" data-i18n="navNosotros">Nosotros</a>
+            <a href="#contacto" data-i18n="navContacto">Contacto</a>
         </div>
     </nav>
 
@@ -77,22 +115,26 @@
             <circle cx="49" cy="46" r="17" stroke="#080808" stroke-width="1.6" />
         </svg>
         <div class="hero-content">
-            <div class="eyebrow">Desarrollo web &amp; software a medida</div>
+            <div class="eyebrow" data-i18n="eyebrow">Desarrollo web &amp; software a medida</div>
             <h1>
-                <span class="word"><span class="word-inner">Del</span></span>
-                <span class="word"><span class="word-inner">concepto</span></span>
-                <span class="word"><span class="word-inner">al</span></span>
-                <span class="word"><span class="word-inner">código.</span></span>
+                <span class="word"><span class="word-inner" data-i18n="heroWord1">Del</span></span>
+                <span class="word"><span class="word-inner" data-i18n="heroWord2">concepto</span></span>
+                <span class="word"><span class="word-inner" data-i18n="heroWord3">al</span></span>
+                <span class="word"><span class="word-inner" data-i18n="heroWord4">código.</span></span>
             </h1>
             <div class="hero-bottom">
-                <p class="hero-desc">Construimos productos digitales precisos — webs, plataformas y software que
+                <p class="hero-desc" data-i18n="heroDesc">Construimos productos digitales precisos — webs,
+                    plataformas y
+                    software que
                     escalan. Sin agencias intermediarias. Sin código genérico.</p>
                 <div class="hero-right">
-                    <div class="availability"><span class="dot"></span> Disponibles para proyectos · Respuesta en 24h
+                    <div class="availability"><span class="dot"></span> <span data-i18n="availability">Disponibles
+                            para
+                            proyectos · Respuesta en 24h</span>
                     </div>
                     <div class="hero-btns">
-                        <a href="#contacto" class="btn-primary">Iniciar proyecto ↗</a>
-                        <a href="#proyectos" class="btn-ghost">Ver portafolio</a>
+                        <a href="#contacto" class="btn-primary" data-i18n="btnPrimary">Iniciar proyecto ↗</a>
+                        <a href="#proyectos" class="btn-ghost" data-i18n="btnGhost">Ver portafolio</a>
                     </div>
                 </div>
             </div>
@@ -103,19 +145,19 @@
     <div class="metrics">
         <div class="metric reveal">
             <div class="metric-num">+30</div>
-            <div class="metric-label">Proyectos entregados</div>
+            <div class="metric-label" data-i18n="metricLabel1">Proyectos entregados</div>
         </div>
         <div class="metric reveal reveal-delay-1">
             <div class="metric-num">100%</div>
-            <div class="metric-label">Código tuyo, siempre</div>
+            <div class="metric-label" data-i18n="metricLabel2">Código tuyo, siempre</div>
         </div>
         <div class="metric reveal reveal-delay-2">
             <div class="metric-num">48h</div>
-            <div class="metric-label">Tiempo de respuesta</div>
+            <div class="metric-label" data-i18n="metricLabel3">Tiempo de respuesta</div>
         </div>
         <div class="metric reveal reveal-delay-3">
             <div class="metric-num">3</div>
-            <div class="metric-label">Fundadores técnicos</div>
+            <div class="metric-label" data-i18n="metricLabel4">Fundadores técnicos</div>
         </div>
     </div>
 
@@ -123,10 +165,12 @@
     <section id="servicios">
         <div class="s-header reveal">
             <div>
-                <div class="s-tag">Lo que hacemos</div>
-                <h2>Servicios</h2>
+                <div class="s-tag" data-i18n="srvTag">Lo que hacemos</div>
+                <h2 data-i18n="srvTitle">Servicios</h2>
             </div>
-            <p>Cada proyecto es código escrito a medida. Sin templates. Sin soluciones genéricas. Solo software que
+            <p data-i18n="srvIntro">Cada proyecto es código escrito a medida. Sin templates. Sin soluciones
+                genéricas.
+                Solo software que
                 resuelve tu problema específico.</p>
         </div>
         <div class="services-grid">
@@ -140,8 +184,9 @@
                         <line x1="14" y1="20" x2="14" y2="24" />
                     </svg>
                 </div>
-                <h3>Desarrollo Web</h3>
-                <p>Sitios y aplicaciones web de alto rendimiento. Desde landing pages hasta plataformas complejas con
+                <h3 data-i18n="srv1Title">Desarrollo Web</h3>
+                <p data-i18n="srv1Desc">Sitios y aplicaciones web de alto rendimiento. Desde landing pages hasta
+                    plataformas complejas con
                     autenticación y dashboards.</p>
                 <div class="srv-pills">
                     <span class="srv-pill">Next.js</span>
@@ -160,8 +205,10 @@
                         <circle cx="12" cy="7" r="1" />
                     </svg>
                 </div>
-                <h3>Software a Medida</h3>
-                <p>Sistemas internos, automatizaciones y herramientas personalizadas que optimizan tus operaciones y
+                <h3 data-i18n="srv2Title">Software a Medida</h3>
+                <p data-i18n="srv2Desc">Sistemas internos, automatizaciones y herramientas personalizadas que
+                    optimizan
+                    tus operaciones y
                     eliminan trabajo manual.</p>
                 <div class="srv-pills">
                     <span class="srv-pill">Node.js</span>
@@ -178,8 +225,10 @@
                         <line x1="12" y1="22" x2="16" y2="22" />
                     </svg>
                 </div>
-                <h3>Apps Móviles</h3>
-                <p>Aplicaciones nativas multiplataforma con una única base de código. Publicación en App Store y Google
+                <h3 data-i18n="srv3Title">Apps Móviles</h3>
+                <p data-i18n="srv3Desc">Aplicaciones nativas multiplataforma con una única base de código.
+                    Publicación
+                    en App Store y Google
                     Play incluida.</p>
                 <div class="srv-pills">
                     <span class="srv-pill">React Native</span>
@@ -196,8 +245,9 @@
                             d="M14 2v4M14 22v4M2 14h4M22 14h4M5.6 5.6l2.8 2.8M19.6 19.6l2.8 2.8M5.6 22.4l2.8-2.8M19.6 8.4l2.8-2.8" />
                     </svg>
                 </div>
-                <h3>Backend &amp; APIs</h3>
-                <p>Arquitecturas escalables, REST y GraphQL APIs, integraciones con servicios externos y bases de datos
+                <h3 data-i18n="srv4Title">Backend &amp; APIs</h3>
+                <p data-i18n="srv4Desc">Arquitecturas escalables, REST y GraphQL APIs, integraciones con servicios
+                    externos y bases de datos
                     optimizadas.</p>
                 <div class="srv-pills">
                     <span class="srv-pill">FastAPI</span>
@@ -215,8 +265,9 @@
                         <line x1="14" y1="18" x2="21" y2="18" />
                     </svg>
                 </div>
-                <h3>UI/UX Design</h3>
-                <p>Interfaces funcionales y estéticas. Prototipado rápido, sistemas de diseño escalables y testing con
+                <h3 data-i18n="srv5Title">UI/UX Design</h3>
+                <p data-i18n="srv5Desc">Interfaces funcionales y estéticas. Prototipado rápido, sistemas de diseño
+                    escalables y testing con
                     usuarios reales.</p>
                 <div class="srv-pills">
                     <span class="srv-pill">Figma</span>
@@ -232,11 +283,13 @@
                         <rect x="2" y="4" width="24" height="20" />
                     </svg>
                 </div>
-                <h3>Consultoría Técnica</h3>
-                <p>Revisión de arquitectura, auditorías de código, optimización de performance y asesoramiento en
+                <h3 data-i18n="srv6Title">Consultoría Técnica</h3>
+                <p data-i18n="srv6Desc">Revisión de arquitectura, auditorías de código, optimización de performance
+                    y
+                    asesoramiento en
                     decisiones técnicas clave.</p>
                 <div class="srv-pills">
-                    <span class="srv-pill">Arquitectura</span>
+                    <span class="srv-pill" data-i18n="srvPill_arquitectura">Arquitectura</span>
                     <span class="srv-pill">Code Review</span>
                 </div>
             </div>
@@ -247,10 +300,12 @@
     <section id="proyectos">
         <div class="s-header reveal">
             <div>
-                <div class="s-tag">Portafolio</div>
-                <h2>Proyectos</h2>
+                <div class="s-tag" data-i18n="projTag">Portafolio</div>
+                <h2 data-i18n="projTitle">Proyectos</h2>
             </div>
-            <p>Una selección de productos digitales que hemos construido para startups, empresas y emprendedores
+            <p data-i18n="projIntro">Una selección de productos digitales que hemos construido para startups,
+                empresas y
+                emprendedores
                 independientes.</p>
         </div>
         <div class="filter-pills" id="filterPills"></div>
@@ -261,34 +316,40 @@
     <section id="proceso">
         <div class="s-header reveal">
             <div>
-                <div class="s-tag">Cómo trabajamos</div>
-                <h2>Proceso</h2>
+                <div class="s-tag" data-i18n="procTag">Cómo trabajamos</div>
+                <h2 data-i18n="procTitle">Proceso</h2>
             </div>
-            <p>Cuatro fases claras. Sin sorpresas. Comunicación directa con los fundadores en cada paso.</p>
+            <p data-i18n="procIntro">Cuatro fases claras. Sin sorpresas. Comunicación directa con los fundadores en
+                cada
+                paso.</p>
         </div>
         <div class="process-grid">
             <div class="proc-step">
                 <div class="proc-big-num">01</div>
                 <h3>Discovery</h3>
-                <p>Entendemos tu negocio, tus usuarios y tus restricciones técnicas. Definimos alcance, stack y
+                <p data-i18n="proc1Desc">Entendemos tu negocio, tus usuarios y tus restricciones técnicas. Definimos
+                    alcance, stack y
                     entregables concretos antes de escribir una línea de código.</p>
             </div>
             <div class="proc-step">
                 <div class="proc-big-num">02</div>
-                <h3>Diseño</h3>
-                <p>Wireframes funcionales y prototipos interactivos en Figma. Iteramos contigo hasta que cada pantalla
+                <h3 data-i18n="proc2Title">Diseño</h3>
+                <p data-i18n="proc2Desc">Wireframes funcionales y prototipos interactivos en Figma. Iteramos contigo
+                    hasta que cada pantalla
                     tenga sentido para tus usuarios reales.</p>
             </div>
             <div class="proc-step">
                 <div class="proc-big-num">03</div>
-                <h3>Desarrollo</h3>
-                <p>Sprints semanales con entregas incrementales. Código limpio, versionado con Git, con deploys de
+                <h3 data-i18n="proc3Title">Desarrollo</h3>
+                <p data-i18n="proc3Desc">Sprints semanales con entregas incrementales. Código limpio, versionado con
+                    Git, con deploys de
                     preview para que veas el progreso en tiempo real.</p>
             </div>
             <div class="proc-step">
                 <div class="proc-big-num">04</div>
                 <h3>Launch</h3>
-                <p>Deploy a producción, monitoreo inicial, documentación técnica y handoff completo. Tu código, tu
+                <p data-i18n="proc4Desc">Deploy a producción, monitoreo inicial, documentación técnica y handoff
+                    completo. Tu código, tu
                     repositorio, tu infraestructura. Sin dependencias.</p>
             </div>
         </div>
@@ -304,33 +365,40 @@
     <section id="nosotros">
         <div class="s-header reveal">
             <div>
-                <div class="s-tag">El equipo</div>
-                <h2>Fundadores</h2>
+                <div class="s-tag" data-i18n="foundTag">El equipo</div>
+                <h2 data-i18n="foundTitle">Fundadores</h2>
             </div>
-            <p>Tres ingenieros que decidieron construir software como se debe: sin intermediarios, sin burocracia, con
+            <p data-i18n="foundIntro">Tres ingenieros que decidieron construir software como se debe: sin
+                intermediarios, sin burocracia, con
                 código de calidad.</p>
         </div>
         <div class="founders-grid">
             <div class="founder-card">
                 <div class="founder-avatar">DP</div>
                 <h3>Danilo Padilla</h3>
-                <div class="founder-role">Co-Fundador</div>
-                <p class="founder-bio">Ingeniero de software y cientifico de datos especializado en arquitectura de
+                <div class="founder-role" data-i18n="foundRole">Co-Fundador</div>
+                <p class="founder-bio" data-i18n="foundBio1">Ingeniero de software y cientifico de datos
+                    especializado
+                    en arquitectura de
                     sistemas y desarrollo
                     full-stack. Lidera la visión técnica y la estrategia de producto de TRIAL.</p>
             </div>
             <div class="founder-card">
                 <div class="founder-avatar">JC</div>
                 <h3>Jhonas Charris</h3>
-                <div class="founder-role">Co-Fundador</div>
-                <p class="founder-bio">Desarrollador full-stack con enfoque en interfaces de alto rendimiento y
+                <div class="founder-role" data-i18n="foundRole">Co-Fundador</div>
+                <p class="founder-bio" data-i18n="foundBio2">Desarrollador full-stack con enfoque en interfaces de
+                    alto
+                    rendimiento y
                     experiencia de usuario. Responsable del diseño de sistemas y la calidad del código.</p>
             </div>
             <div class="founder-card">
                 <div class="founder-avatar">LM</div>
                 <h3>Luis Maza</h3>
-                <div class="founder-role">Co-Fundador</div>
-                <p class="founder-bio">Especialista en backend, bases de datos y DevOps. Diseña las arquitecturas
+                <div class="founder-role" data-i18n="foundRole">Co-Fundador</div>
+                <p class="founder-bio" data-i18n="foundBio3">Especialista en backend, bases de datos y DevOps.
+                    Diseña
+                    las arquitecturas
                     escalables y los pipelines de deployment en cada proyecto de TRIAL.</p>
             </div>
         </div>
@@ -340,61 +408,82 @@
     <section>
         <div class="s-header reveal">
             <div>
-                <div class="s-tag">Preguntas frecuentes</div>
-                <h2>FAQ</h2>
+                <div class="s-tag" data-i18n="faqTag">Preguntas frecuentes</div>
+                <h2 data-i18n="faqTitle">FAQ</h2>
             </div>
         </div>
         <div class="faq-list" id="faqList">
             <div class="faq-item">
-                <button class="faq-q">¿Cuánto cuesta un proyecto?<span class="faq-icon">+</span></button>
+                <button class="faq-q"><span data-i18n="faq1Q">¿Cuánto cuesta un proyecto?</span><span
+                        class="faq-icon">+</span></button>
                 <div class="faq-a">
-                    <p>Depende del alcance. Después de una llamada de discovery gratuita, entregamos una propuesta
+                    <p data-i18n="faq1A">Depende del alcance. Después de una llamada de discovery gratuita,
+                        entregamos
+                        una propuesta
                         detallada con precio fijo. Sin costos ocultos, sin sorpresas. Proyectos web típicos arrancan
                         desde $1,500 USD.</p>
                 </div>
             </div>
             <div class="faq-item">
-                <button class="faq-q">¿Cuánto tiempo toma un proyecto?<span class="faq-icon">+</span></button>
+                <button class="faq-q"><span data-i18n="faq2Q">¿Cuánto tiempo toma un proyecto?</span><span
+                        class="faq-icon">+</span></button>
                 <div class="faq-a">
-                    <p>Un sitio web estándar toma entre 2 y 4 semanas. Plataformas más complejas con autenticación,
-                        dashboards y APIs pueden tomar de 6 a 12 semanas. Definimos el timeline exacto antes de empezar.
+                    <p data-i18n="faq2A">Un sitio web estándar toma entre 2 y 4 semanas. Plataformas más complejas
+                        con
+                        autenticación,
+                        dashboards y APIs pueden tomar de 6 a 12 semanas. Definimos el timeline exacto antes de
+                        empezar.
                     </p>
                 </div>
             </div>
             <div class="faq-item">
-                <button class="faq-q">¿El código es mío al final?<span class="faq-icon">+</span></button>
+                <button class="faq-q"><span data-i18n="faq3Q">¿El código es mío al final?</span><span
+                        class="faq-icon">+</span></button>
                 <div class="faq-a">
-                    <p>Sí, 100%. Recibes acceso completo al repositorio, la documentación técnica y la infraestructura.
+                    <p data-i18n="faq3A">Sí, 100%. Recibes acceso completo al repositorio, la documentación técnica
+                        y la
+                        infraestructura.
                         Sin licencias recurrentes, sin lock-in. Tu código es tuyo desde el día uno.</p>
                 </div>
             </div>
             <div class="faq-item">
-                <button class="faq-q">¿Trabajan con clientes internacionales?<span class="faq-icon">+</span></button>
+                <button class="faq-q"><span data-i18n="faq4Q">¿Trabajan con clientes internacionales?</span><span
+                        class="faq-icon">+</span></button>
                 <div class="faq-a">
-                    <p>Sí. Trabajamos de forma 100% remota con clientes en Latinoamérica, Estados Unidos y Europa. Nos
+                    <p data-i18n="faq4A">Sí. Trabajamos de forma 100% remota con clientes en Latinoamérica, Estados
+                        Unidos y Europa. Nos
                         comunicamos en español e inglés y nos adaptamos a tu zona horaria.</p>
                 </div>
             </div>
             <div class="faq-item">
-                <button class="faq-q">¿Ofrecen mantenimiento post-lanzamiento?<span class="faq-icon">+</span></button>
+                <button class="faq-q"><span data-i18n="faq5Q">¿Ofrecen mantenimiento post-lanzamiento?</span><span
+                        class="faq-icon">+</span></button>
                 <div class="faq-a">
-                    <p>Sí. Ofrecemos planes de mantenimiento mensual que incluyen updates de seguridad, monitoreo, bug
-                        fixes y mejoras incrementales. También puedes contactarnos para intervenciones puntuales.</p>
+                    <p data-i18n="faq5A">Sí. Ofrecemos planes de mantenimiento mensual que incluyen updates de
+                        seguridad, monitoreo, bug
+                        fixes y mejoras incrementales. También puedes contactarnos para intervenciones puntuales.
+                    </p>
                 </div>
             </div>
             <div class="faq-item">
-                <button class="faq-q">¿Puedo pedir cambios durante el desarrollo?<span
-                        class="faq-icon">+</span></button>
+                <button class="faq-q"><span data-i18n="faq6Q">¿Puedo pedir cambios durante el
+                        desarrollo?</span><span class="faq-icon">+</span></button>
                 <div class="faq-a">
-                    <p>Por supuesto. Trabajamos en sprints semanales con entregas visibles. Revisamos el progreso juntos
-                        y ajustamos prioridades. Cambios menores dentro del alcance están incluidos; cambios mayores se
+                    <p data-i18n="faq6A">Por supuesto. Trabajamos en sprints semanales con entregas visibles.
+                        Revisamos
+                        el progreso juntos
+                        y ajustamos prioridades. Cambios menores dentro del alcance están incluidos; cambios mayores
+                        se
                         cotizan por separado.</p>
                 </div>
             </div>
             <div class="faq-item">
-                <button class="faq-q">¿Cómo empezamos?<span class="faq-icon">+</span></button>
+                <button class="faq-q"><span data-i18n="faq7Q">¿Cómo empezamos?</span><span
+                        class="faq-icon">+</span></button>
                 <div class="faq-a">
-                    <p>Escríbenos por WhatsApp o email. Agendamos una llamada de 30 minutos sin costo donde entendemos
+                    <p data-i18n="faq7A">Escríbenos por WhatsApp o email. Agendamos una llamada de 30 minutos sin
+                        costo
+                        donde entendemos
                         tu proyecto, definimos el alcance y te entregamos una propuesta en 48 horas.</p>
                 </div>
             </div>
@@ -403,13 +492,17 @@
 
     <!-- CTA -->
     <section class="cta" id="contacto">
-        <div class="s-tag reveal">Hablemos</div>
-        <h2 class="reveal reveal-delay-1">Contáctanos</h2>
-        <p class="sub reveal reveal-delay-2">Primera consulta sin costo. Respuesta garantizada en 24 horas.</p>
+        <div class="s-tag reveal" data-i18n="ctaTag">Hablemos</div>
+        <h2 class="reveal reveal-delay-1" data-i18n="ctaTitle">Contáctanos</h2>
+        <p class="sub reveal reveal-delay-2" data-i18n="ctaSub">Primera consulta sin costo. Respuesta garantizada en
+            24
+            horas.</p>
 
         <div class="cta-links reveal reveal-delay-3">
-            <a href="https://wa.me/573011355799" target="_blank" class="btn-primary">Escribir por WhatsApp ↗</a>
-            <a href="https://www.instagram.com/trial.devs" target="_blank" class="cta-instagram">nuestro instagram
+            <a href="https://wa.me/573011355799" target="_blank" class="btn-primary" data-i18n="ctaWhatsapp">Escribir
+                por WhatsApp ↗</a>
+            <a href="https://www.instagram.com/trial.devs" target="_blank" class="cta-instagram"
+                data-i18n="ctaInstagram">nuestro instagram
                 ↗</a>
             <a href="mailto:trialdevcompany@gmail.com" class="cta-email">
                 <svg viewBox="0 0 20 20" fill="none" stroke="#080808" stroke-width="1.2">
@@ -423,20 +516,23 @@
         <!-- Terminal Contact Form -->
         <div class="terminal-form reveal reveal-delay-4">
             <div class="terminal-header">
-                <span class="terminal-comment">// CONTÁCTANOS</span>
-                <span class="terminal-cmd">> establecer_conexion</span>
+                <span class="terminal-comment" data-i18n="terminalComment">// CONTÁCTANOS</span>
+                <span class="terminal-cmd" data-i18n="terminalCmd">> establecer_conexion</span>
             </div>
             <form id="contactForm">
                 <div class="input-group">
-                    <label for="user_name"><span class="prompt">•</span> Nombre:</label>
+                    <label for="user_name"><span class="prompt">•</span> <span
+                            data-i18n="labelNombre">Nombre:</span></label>
                     <input type="text" id="user_name" name="user_name" required autocomplete="off">
                 </div>
                 <div class="input-group">
-                    <label for="user_email"><span class="prompt">•</span> Email:</label>
+                    <label for="user_email"><span class="prompt">•</span> <span
+                            data-i18n="labelEmail">Email:</span></label>
                     <input type="email" id="user_email" name="user_email" required autocomplete="off">
                 </div>
                 <div class="input-group">
-                    <label for="message"><span class="prompt">•</span> Mensaje:</label>
+                    <label for="message"><span class="prompt">•</span> <span
+                            data-i18n="labelMensaje">Mensaje:</span></label>
                     <textarea id="message" name="message" required autocomplete="off" rows="1"></textarea>
                 </div>
                 <button type="submit" class="terminal-btn" id="submitBtn">
@@ -445,7 +541,7 @@
                         <line x1="22" y1="2" x2="11" y2="13"></line>
                         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                     </svg>
-                    Enviar
+                    <span data-i18n="btnEnviar">Enviar</span>
                 </button>
                 <div id="formStatus" class="form-status"></div>
             </form>
@@ -462,7 +558,7 @@
             </svg>
             <span>TRIAL</span>
         </div>
-        <div class="footer-copy">© 2026 TRIAL · Barranquilla, Colombia</div>
+        <div class="footer-copy" data-i18n="footerCopy">© 2026 TRIAL · Barranquilla, Colombia</div>
         <div class="footer-links">
             <a href="https://wa.me/573011355799" target="_blank">WhatsApp</a>
             <a href="https://www.instagram.com/trial.devs" target="_blank">Instagram</a>

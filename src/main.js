@@ -7,16 +7,258 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import emailjs from '@emailjs/browser';
+import { applyLanguage, translations } from './i18n.js';
 import './styles.css';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
-// ─── WAIT FOR DOM ──────────────────────────
-function init() {
+// Global translation trigger hook for dynamic pieces
+window.updateDynamicLanguage = null;
 
-    // Reveal page — prevents FOUC
-    document.body.classList.add('loaded');
+// ═══════════════════════════════════════════════
+//  SPLASH SCREEN — Vortex Animation Engine
+// ═══════════════════════════════════════════════
+function initSplash() {
+    const splash = document.getElementById('splash');
+    if (!splash) { initLandingPage(); return; }
+
+    const svg = splash.querySelector('.splash-logo');
+    const circles = splash.querySelectorAll('.vortex-c');
+    const splashUI = splash.querySelector('.splash-ui');
+    const enterBtn = splash.querySelector('.splash-enter');
+    const langBtns = splash.querySelectorAll('.lang-btn');
+    const glass = splash.querySelector('.splash-glass');
+
+    // Initialize default language translation to 'es'
+    applyLanguage('es');
+
+    // ── SVG viewBox center ──
+    const svgCX = 35, svgCY = 32.5;
+
+    // ── Each circle's native SVG position ──
+    const circleData = [
+        { cx: 35, cy: 18 },   // top center
+        { cx: 21, cy: 46 },   // bottom-left
+        { cx: 49, cy: 46 },   // bottom-right
+    ];
+
+    // ── Entry directions (in SVG units from center of viewBox) ──
+    //    Top circle → from top-left       (-120, -100)
+    //    Bottom-left → from bottom-left   (-120, +100)
+    //    Bottom-right → from bottom-right (+120, +100)
+    const entryOffsets = [
+        { x: -150, y: -130 },  // top-left corner
+        { x: -150, y: 130 },   // bottom-left corner
+        { x: 150, y: 130 },    // bottom-right corner
+    ];
+
+    // ── Create motion trail ghost circles for each circle ──
+    const TRAIL_COUNT = 5;
+    const trails = [];
+
+    circles.forEach((c, i) => {
+        const ghostGroup = [];
+        for (let g = 0; g < TRAIL_COUNT; g++) {
+            const ghost = c.cloneNode(true);
+            ghost.classList.remove('vortex-c');
+            ghost.classList.add('vortex-trail');
+            ghost.setAttribute('fill', 'none');
+            ghost.setAttribute('stroke', '#080808');
+            ghost.setAttribute('stroke-width', '0.8');
+            ghost.style.opacity = '0';
+            // Insert before the real circle so trail is behind
+            svg.insertBefore(ghost, c);
+            ghostGroup.push({ el: ghost, delay: (g + 1) * 0.04 });
+        }
+        trails.push(ghostGroup);
+    });
+
+    // ── Set initial positions (far from center, at their corners) ──
+    circles.forEach((c, i) => {
+        gsap.set(c, {
+            attr: {
+                cx: circleData[i].cx + entryOffsets[i].x,
+                cy: circleData[i].cy + entryOffsets[i].y,
+            },
+            opacity: 0,
+        });
+    });
+
+    // ── Position history for trails ──
+    const posHistory = circles.length ? Array.from({ length: circles.length }, () => []) : [];
+
+    // ── Vortex IN timeline ──
+    const tlIn = gsap.timeline({
+        delay: 0.4,
+        defaults: { force3D: true }
+    });
+
+    circles.forEach((c, i) => {
+        const startX = circleData[i].cx + entryOffsets[i].x;
+        const startY = circleData[i].cy + entryOffsets[i].y;
+        const endX = circleData[i].cx;
+        const endY = circleData[i].cy;
+
+        const proxy = { t: 0 };
+
+        tlIn.to(proxy, {
+            t: 1,
+            duration: 2.2,
+            ease: 'power2.inOut',
+            onStart: () => {
+                gsap.to(c, { opacity: 1, duration: 0.4, ease: 'power2.out' });
+            },
+            onUpdate: () => {
+                const t = proxy.t;
+
+                // Curved path: add a perpendicular arc offset
+                // This creates the sweeping "vortex" feel
+                const arcStrength = 60 * Math.sin(t * Math.PI); // peaks at t=0.5
+                const perpX = -(entryOffsets[i].y / 130) * arcStrength;
+                const perpY = (entryOffsets[i].x / 150) * arcStrength;
+
+                const curX = startX + (endX - startX) * t + perpX * (1 - t);
+                const curY = startY + (endY - startY) * t + perpY * (1 - t);
+
+                c.setAttribute('cx', curX);
+                c.setAttribute('cy', curY);
+
+                // Store position for trail
+                posHistory[i].push({ x: curX, y: curY, opacity: 1 - t * 0.3 });
+
+                // Update trail ghosts
+                trails[i].forEach((ghost, g) => {
+                    const histIdx = Math.max(0, posHistory[i].length - 1 - Math.round((g + 1) * 3));
+                    const pos = posHistory[i][histIdx];
+                    if (pos) {
+                        ghost.el.setAttribute('cx', pos.x);
+                        ghost.el.setAttribute('cy', pos.y);
+                        // Trail fades: farther ghosts are more transparent
+                        const trailOpacity = Math.max(0, (0.35 - g * 0.07)) * (1 - Math.pow(t, 3));
+                        ghost.el.style.opacity = trailOpacity;
+                    }
+                });
+            },
+            onComplete: () => {
+                // Set explicitly and remove elastic bounce to fix the stutter "tiron"
+                c.setAttribute('cx', endX);
+                c.setAttribute('cy', endY);
+                // Fade out all trail ghosts
+                trails[i].forEach(ghost => {
+                    gsap.to(ghost.el, { opacity: 0, duration: 0.5, ease: 'power2.out' });
+                });
+            }
+        }, i * 0.2); // staggered entry
+    });
+
+    // ── Show UI after circles settle ──
+    gsap.set(splashUI, { y: 20 });
+    tlIn.to(splashUI, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+    }, '-=0.3');
+
+    // ── Language Toggle ──
+    langBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            langBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const lang = btn.dataset.lang;
+            const translations = applyLanguage(lang);
+
+            // Re-update the dynamic ENTER button text (in case applyLanguage logic needs it directly overriden in splash)
+            enterBtn.textContent = translations ? translations.splashEnter : (lang === 'en' ? 'ENTER' : 'ENTRAR');
+        });
+    });
+
+    // ── ENTER button — Exit Animation ──
+    enterBtn.addEventListener('click', () => {
+        enterBtn.style.pointerEvents = 'none';
+
+        const tlOut = gsap.timeline({
+            defaults: { force3D: true },
+            onComplete: () => {
+                splash.remove();
+                initLandingPage();
+            }
+        });
+
+        // Fade out UI first
+        tlOut.to(splashUI, {
+            opacity: 0,
+            y: -15,
+            duration: 0.35,
+            ease: 'power2.in',
+        });
+
+        // Exit: circles travel back to their corners with arc
+        circles.forEach((c, i) => {
+            const endX = circleData[i].cx + entryOffsets[i].x * 1.2;
+            const endY = circleData[i].cy + entryOffsets[i].y * 1.2;
+            const startX = circleData[i].cx;
+            const startY = circleData[i].cy;
+
+            const proxy = { t: 0 };
+            const exitHistory = [];
+
+            tlOut.to(proxy, {
+                t: 1,
+                duration: 1,
+                ease: 'power3.in',
+                onUpdate: () => {
+                    const t = proxy.t;
+                    const arcStr = 40 * Math.sin(t * Math.PI);
+                    const perpX = (entryOffsets[i].y / 130) * arcStr;
+                    const perpY = -(entryOffsets[i].x / 150) * arcStr;
+
+                    const curX = startX + (endX - startX) * t + perpX * t;
+                    const curY = startY + (endY - startY) * t + perpY * t;
+
+                    c.setAttribute('cx', curX);
+                    c.setAttribute('cy', curY);
+                    c.style.opacity = 1 - t;
+
+                    // Exit trail
+                    exitHistory.push({ x: curX, y: curY });
+                    trails[i].forEach((ghost, g) => {
+                        const histIdx = Math.max(0, exitHistory.length - 1 - Math.round((g + 1) * 2));
+                        const pos = exitHistory[histIdx];
+                        if (pos) {
+                            ghost.el.setAttribute('cx', pos.x);
+                            ghost.el.setAttribute('cy', pos.y);
+                            ghost.el.style.opacity = Math.max(0, (0.25 - g * 0.05) * (1 - t));
+                        }
+                    });
+                },
+            }, i * 0.06 + 0.15);
+        });
+
+        // Glass fade out
+        tlOut.to(glass, {
+            opacity: 0,
+            duration: 0.7,
+            ease: 'power2.inOut',
+        }, '-=0.5');
+    });
+}
+
+
+// ═══════════════════════════════════════════════
+//  LANDING PAGE — All site animations
+// ═══════════════════════════════════════════════
+function initLandingPage() {
+
+    // Force scroll to top before revealing anything, preventing jump after splash
+    window.scrollTo(0, 0);
+
+    // Reveal page content (hidden by inline style to prevent FOUC)
+    document.querySelectorAll('.navbar, section, .metrics, .marquee-section, footer').forEach(el => {
+        el.style.visibility = 'visible';
+    });
 
     // ─── LENIS SMOOTH SCROLL ───────────────────
     const lenis = new Lenis({
@@ -143,38 +385,54 @@ function init() {
 
     // ─── PROJECTS ──────────────────────────────
     (function initProjects() {
-        const projects = [
-            { num: '01', name: 'Plataforma E-Commerce', type: 'Web', year: '2026', filter: 'web' },
-            { num: '02', name: 'Dashboard Analítico SaaS', type: 'SaaS', year: '2025', filter: 'saas' },
-            { num: '03', name: 'Asistente IA Conversacional', type: 'IA', year: '2025', filter: 'ia' },
-            { num: '04', name: 'App de Gestión Financiera', type: 'Mobile', year: '2025', filter: 'mobile' },
-            { num: '05', name: 'Portal Inmobiliario', type: 'Web', year: '2024', filter: 'web' },
-            { num: '06', name: 'Sistema de Inventario Cloud', type: 'SaaS', year: '2024', filter: 'saas' },
-            { num: '07', name: 'Automatización de Reportes IA', type: 'IA', year: '2024', filter: 'ia' },
+        const rawProjects = [
+            { num: '01', i18nKey: 'proj1', type: 'Web', year: '2026', filter: 'web' },
+            { num: '02', i18nKey: 'proj2', type: 'SaaS', year: '2025', filter: 'saas' },
+            { num: '03', i18nKey: 'proj3', type: 'IA', year: '2025', filter: 'ia' },
+            { num: '04', i18nKey: 'proj4', type: 'Mobile', year: '2025', filter: 'mobile' },
+            { num: '05', i18nKey: 'proj5', type: 'Web', year: '2024', filter: 'web' },
+            { num: '06', i18nKey: 'proj6', type: 'SaaS', year: '2024', filter: 'saas' },
+            { num: '07', i18nKey: 'proj7', type: 'IA', year: '2024', filter: 'ia' },
         ];
 
         const filters = ['todo', 'web', 'saas', 'ia', 'mobile'];
         const pillsC = document.getElementById('filterPills');
         const listC = document.getElementById('projectsList');
+        let currentFilter = 'todo';
 
         if (!pillsC || !listC) return;
 
-        // Build filter pills
-        filters.forEach((f) => {
-            const b = document.createElement('button');
-            b.className = 'filter-pill' + (f === 'todo' ? ' active' : '');
-            b.textContent = f === 'todo' ? 'Todo' : f.toUpperCase();
-            b.dataset.filter = f;
-            b.addEventListener('click', () => {
-                document.querySelectorAll('.filter-pill').forEach((p) => p.classList.remove('active'));
-                b.classList.add('active');
-                renderProjects(f);
+        function renderPills() {
+            pillsC.innerHTML = '';
+            const activeLang = document.documentElement.lang || 'es';
+            const t = translations[activeLang];
+
+            filters.forEach((f) => {
+                const b = document.createElement('button');
+                b.className = 'filter-pill' + (f === currentFilter ? ' active' : '');
+                b.textContent = f === 'todo' ? t.projFilterAll : f.toUpperCase();
+                b.dataset.filter = f;
+                b.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-pill').forEach((p) => p.classList.remove('active'));
+                    b.classList.add('active');
+                    currentFilter = f;
+                    renderProjects(f);
+                });
+                pillsC.appendChild(b);
             });
-            pillsC.appendChild(b);
-        });
+        }
 
         function renderProjects(filter) {
-            const filtered = filter === 'todo' ? projects : projects.filter((p) => p.filter === filter);
+            const activeLang = document.documentElement.lang || 'es';
+            const t = translations[activeLang];
+
+            // Map the raw data to localized names
+            const mapped = rawProjects.map(p => ({
+                ...p,
+                name: t[p.i18nKey]
+            }));
+
+            const filtered = filter === 'todo' ? mapped : mapped.filter((p) => p.filter === filter);
 
             // Animate out existing rows
             const existingRows = listC.querySelectorAll('.proj-row');
@@ -216,7 +474,14 @@ function init() {
             );
         }
 
-        renderProjects('todo');
+        // Expose a hook to re-render when language changes
+        window.updateDynamicLanguage = () => {
+            renderPills();
+            renderProjects(currentFilter);
+        };
+
+        renderPills();
+        renderProjects(currentFilter);
     })();
 
     // ─── MARQUEE (GSAP-powered infinite scroll) ─
@@ -439,9 +704,9 @@ function init() {
 
 }
 
-// Run init when DOM is ready
+// ── Bootstrap ──────────────────────────────────
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', initSplash);
 } else {
-    init();
+    initSplash();
 }
