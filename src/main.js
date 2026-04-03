@@ -195,47 +195,12 @@ function initSplash() {
             ease: 'power2.in',
         });
 
-        // Exit: circles travel back to their corners with arc
-        circles.forEach((c, i) => {
-            const endX = circleData[i].cx + entryOffsets[i].x * 1.2;
-            const endY = circleData[i].cy + entryOffsets[i].y * 1.2;
-            const startX = circleData[i].cx;
-            const startY = circleData[i].cy;
-
-            const proxy = { t: 0 };
-            const exitHistory = [];
-
-            tlOut.to(proxy, {
-                t: 1,
-                duration: 1,
-                ease: 'power3.in',
-                onUpdate: () => {
-                    const t = proxy.t;
-                    const arcStr = 40 * Math.sin(t * Math.PI);
-                    const perpX = (entryOffsets[i].y / 130) * arcStr;
-                    const perpY = -(entryOffsets[i].x / 150) * arcStr;
-
-                    const curX = startX + (endX - startX) * t + perpX * t;
-                    const curY = startY + (endY - startY) * t + perpY * t;
-
-                    c.setAttribute('cx', curX);
-                    c.setAttribute('cy', curY);
-                    c.style.opacity = 1 - t;
-
-                    // Exit trail
-                    exitHistory.push({ x: curX, y: curY });
-                    trails[i].forEach((ghost, g) => {
-                        const histIdx = Math.max(0, exitHistory.length - 1 - Math.round((g + 1) * 2));
-                        const pos = exitHistory[histIdx];
-                        if (pos) {
-                            ghost.el.setAttribute('cx', pos.x);
-                            ghost.el.setAttribute('cy', pos.y);
-                            ghost.el.style.opacity = Math.max(0, (0.25 - g * 0.05) * (1 - t));
-                        }
-                    });
-                },
-            }, i * 0.06 + 0.15);
-        });
+        // Fade out the entire SVG container (Venn diagram and trails)
+        tlOut.to(svg, {
+            opacity: 0,
+            duration: 0.5,
+            ease: 'power2.out',
+        }, "-=0.15");
 
         // Glass fade out
         tlOut.to(glass, {
